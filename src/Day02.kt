@@ -1,22 +1,22 @@
 fun main() {
-    fun generateRanges(input: String): List<LongRange> {
-        return input.split(",").map { section ->
-            val (start, end) = section.split("-").map { it.toLong() }
-            start..end
+    fun generateRanges(input: String): List<LongRange> =
+        input.split(",").map {
+            it.split("-").let { (start, end) -> start.toLong()..end.toLong() }
         }
-    }
 
-    fun part1(input: String): Long {
-        val ranges = generateRanges(input)
-        val regex = Regex("^(\\d+?)\\1\$")
-        return ranges.flatMap { it.filter { regex.matches(it.toString()) } }.sum()
-    }
+    fun sumMatchingNumbers(input: String, regex: Regex): Long =
+        generateRanges(input).sumOf { range ->
+            range.sumOf { num ->
+                num.takeIf { regex.matches(it.toString()) } ?: 0L
+            }
+        }
 
-    fun part2(input: String): Long {
-        val ranges = generateRanges(input)
-        val regex = Regex("^(\\d+?)\\1+\$")
-        return ranges.flatMap { it.filter { regex.matches(it.toString()) } }.sum()
-    }
+    fun part1(input: String): Long =
+        sumMatchingNumbers(input, Regex("""^(\d+?)\1$"""))
+
+    fun part2(input: String): Long =
+        sumMatchingNumbers(input, Regex("""^(\d+?)\1+$"""))
+
 
 
     val testInput = readInput("Day02_test").first()
@@ -24,8 +24,8 @@ fun main() {
     check(part2(testInput) == 4174379265L)
 
     val input = readInput("Day02").first()
-    println("Part 1: " + part1(input))
-    println("Part 2: " + part2(input))
+    println("Part 1: ${part1(input)}")
+    println("Part 2: ${part2(input)}")
     check(part1(input) == 55916882972L)
     check(part2(input) == 76169125915L)
 }
