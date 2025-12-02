@@ -1,16 +1,19 @@
-#set( $Code = "bar" )
 fun main() {
     fun part1(input: List<String>): Int {
-        return input.size
+        TODO()
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        TODO()
     }
 
-    check(part1(listOf("...")) == 1)
+    val testInput = readInput(${Day}, isTest = true)
+    // check(part1(testInput) == 0)
+    // check(part2(testInput) == 0)
 
-    val input = readInput("Day$Day")
-    part1(input).println()
-    part2(input).println()
+    val input = readInput(${Day})
+    // println("Part 1: " + part1(input)")
+    // println("Part 2: " + part2(input)")
+    // check(part1(input) == 0)
+    // check(part2(input) == 0)
 }

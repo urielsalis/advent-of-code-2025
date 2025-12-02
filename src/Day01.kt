@@ -50,11 +50,11 @@ fun main() {
     }
 
 
-    val testInput = readInput("Day01_test")
+    val testInput = readLines(1, isTest = true)
     check(part1(testInput) == 3)
     check(part2(testInput) == 6)
 
-    val input = readInput("Day01")
+    val input = readLines(1)
     println("Part 1: " + part1(input)) // 1158
     println("Part 2: " + part2(input)) // 6860
     check(part1(input) == 1158)

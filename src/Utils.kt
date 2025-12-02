@@ -3,10 +3,21 @@ import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
+
 /**
- * Reads lines from the given input txt file.
+ * Reads the entire input for the given day number.
  */
-fun readInput(name: String) = Path("data/$name.txt").readText().trim().lines()
+fun readInput(day: Int, isTest: Boolean = false): String {
+    val fileName = "data/Day${day.toString().padStart(2, '0')}${if (isTest) "_test" else ""}.txt"
+    return Path(fileName).readText()
+}
+
+/**
+ * Reads lines from input file for the given day number.
+ */
+fun readLines(day: Int, isTest: Boolean = false): List<String> {
+    return readInput(day, isTest).trim().lines()
+}
 
 /**
  * Converts string to md5 hash.

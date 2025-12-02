@@ -19,11 +19,11 @@ fun main() {
 
 
 
-    val testInput = readInput("Day02_test").first()
+    val testInput = readInput(2, isTest = true)
     check(part1(testInput) == 1227775554L)
     check(part2(testInput) == 4174379265L)
 
-    val input = readInput("Day02").first()
+    val input = readInput(2)
     println("Part 1: ${part1(input)}")
     println("Part 2: ${part2(input)}")
     check(part1(input) == 55916882972L)
