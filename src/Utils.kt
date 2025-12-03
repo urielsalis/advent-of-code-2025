@@ -2,6 +2,7 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.pow
 
 
 /**
@@ -18,6 +19,11 @@ fun readInput(day: Int, isTest: Boolean = false): String {
 fun readLines(day: Int, isTest: Boolean = false): List<String> {
     return readInput(day, isTest).trim().lines()
 }
+
+/**
+ * Computes an exponent of 2 Longs.
+ */
+fun Number.pow(other: Number): Long = this.toDouble().pow(other.toDouble()).toLong()
 
 /**
  * Converts string to md5 hash.
