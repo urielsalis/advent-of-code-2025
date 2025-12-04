@@ -23,6 +23,15 @@ fun readLines(day: Int, isTest: Boolean = false): List<String> {
 }
 
 /**
+ * Reads the entire input as a grid
+ */
+fun <T: GridCell> readGrid(day: Int, isTest: Boolean = false, f: (Char) -> T): Grid<T> {
+    val lines = readLines(day, isTest)
+    val content = lines.map { it.toList().map(f).toMutableList() }
+    return Grid(content)
+}
+
+/**
  * Computes an exponent of 2 Longs.
  */
 fun Number.pow(other: Number): Long = this.toDouble().pow(other.toDouble()).toLong()
