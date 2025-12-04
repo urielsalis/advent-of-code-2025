@@ -1,3 +1,5 @@
+import util.readLines
+
 fun extractMovement(movement: String): Pair<Char, Int> {
     val direction = movement[0]
     val count = movement.substring(1).toInt()

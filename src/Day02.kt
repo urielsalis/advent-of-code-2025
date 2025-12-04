@@ -1,3 +1,5 @@
+import util.readInput
+
 fun main() {
     fun generateRanges(input: String): List<LongRange> =
         input.split(",").map {

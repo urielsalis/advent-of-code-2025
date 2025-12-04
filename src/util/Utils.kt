@@ -1,3 +1,5 @@
+package util
+
 import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.Path
@@ -26,7 +28,7 @@ fun readLines(day: Int, isTest: Boolean = false): List<String> {
 fun Number.pow(other: Number): Long = this.toDouble().pow(other.toDouble()).toLong()
 
 /**
- * Converts string to md5 hash.
+ * Converts string to util.md5 hash.
  */
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
     .toString(16)
