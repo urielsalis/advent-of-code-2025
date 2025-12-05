@@ -47,3 +47,19 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
  * The cleaner shorthand for printing output.
  */
 fun Any?.println() = println(this)
+
+/**
+ * Merges overlapping and contiguous LongRanges into the minimal set of LongRanges covering the same values.
+ */
+fun merge(ranges: List<LongRange>): List<LongRange> {
+    val sorted = ranges.sortedBy { it.first }
+    return sorted.drop(1).fold(mutableListOf(sorted.first())) { merged, range ->
+        val last = merged.last()
+        if (last.last >= range.first - 1) {
+            merged[merged.lastIndex] = last.first..maxOf(last.last, range.last)
+        } else {
+            merged.add(range)
+        }
+        merged
+    }
+}
