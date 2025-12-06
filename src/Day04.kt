@@ -1,5 +1,6 @@
 import util.Grid
 import util.GridCell
+import util.Position
 import util.readGrid
 
 enum class PaperGrid(private val char: Char) : GridCell {
@@ -20,7 +21,7 @@ enum class PaperGrid(private val char: Char) : GridCell {
 fun main() {
     fun part1(input: Grid<GridCell>): Int = input.flatMapIndexed { row, col, cell ->
         if (cell == PaperGrid.PAPER &&
-            input.neighbors(row, col, diagonals = true).count { it == PaperGrid.PAPER } < 4) {
+            input.neighbors(Position(row, col), diagonals = true).count { it == PaperGrid.PAPER } < 4) {
             1
         } else {
             0
@@ -35,7 +36,7 @@ fun main() {
             val accessiblePositions = buildList {
                 grid.flatMapIndexed { row, col, cell ->
                     if (cell == PaperGrid.PAPER &&
-                        grid.neighbors(row, col, diagonals = true).count { it == PaperGrid.PAPER } < 4) {
+                        grid.neighbors(row to col, diagonals = true).count { it == PaperGrid.PAPER } < 4) {
                         add(row to col)
                     }
                 }
@@ -43,7 +44,7 @@ fun main() {
 
             if (accessiblePositions.isEmpty()) break
 
-            accessiblePositions.forEach { (row, col) -> grid[row, col] = PaperGrid.EMPTY }
+            accessiblePositions.forEach { position -> grid[position] = PaperGrid.EMPTY }
             total += accessiblePositions.size
         }
 

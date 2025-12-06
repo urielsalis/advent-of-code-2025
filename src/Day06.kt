@@ -8,9 +8,9 @@ fun main() {
     }
 
     fun part1(input: List<String>): Long {
-        val operations = input.last().split("\\s+".toRegex())
+        val operations = input.last().trim().split("\\s+".toRegex())
         val numbers = input.dropLast(1).map { row ->
-            row.split("\\s+".toRegex()).map { it.toLong() }
+            row.trim().split("\\s+".toRegex()).map { it.toLong() }
         }
 
         return operations.indices.sumOf { i ->
@@ -29,13 +29,15 @@ fun main() {
         var col = maxColumn
 
         while (col >= 0) {
-            val number = buildString {
+            val numberStr = buildString {
                 grid.forEach { row ->
                     row.getOrNull(col)?.digitToIntOrNull()?.let { append(it) }
                 }
-            }.toLong()
+            }
 
-            batch.add(number)
+            if (numberStr.isNotEmpty()) {
+                batch.add(numberStr.toLong())
+            }
 
             operations.getOrNull(col)?.takeIf { it != ' ' }?.let { operation ->
                 sum += applyOperation(operation, batch)
