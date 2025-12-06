@@ -63,3 +63,22 @@ fun merge(ranges: List<LongRange>): List<LongRange> {
         merged
     }
 }
+
+
+/**
+ * Generates all permutations of the list.
+ */
+fun <T> List<T>.permutations(): List<List<T>> {
+    if (isEmpty()) return listOf(emptyList())
+    if (size == 1) return listOf(this)
+
+    val result = mutableListOf<List<T>>()
+    for (i in indices) {
+        val element = this[i]
+        val remaining = this.toMutableList().apply { removeAt(i) }
+        for (permutation in remaining.permutations()) {
+            result.add(listOf(element) + permutation)
+        }
+    }
+    return result
+}
