@@ -82,3 +82,12 @@ fun <T> List<T>.permutations(): List<List<T>> {
     }
     return result
 }
+
+tailrec fun gcd(a: Long, b: Long): Long {
+    if (b == 0L) {
+        return a
+    }
+    return gcd(b, a % b)
+}
+
+fun lcm(a: Long, b: Long): Long = a / gcd(a, b) * b
