@@ -1,6 +1,5 @@
 import util.Grid
 import util.GridCell
-import util.col
 import util.readGrid
 
 enum class TachyonGrid(private val char: Char) : GridCell {
@@ -19,11 +18,7 @@ fun main() {
     fun solve(input: Grid<GridCell>): Pair<Int, Long> {
         val startCol = input.find(TachyonGrid.START).col
 
-        val splitters = input.content.flatMap { row ->
-            row.withIndex()
-                .filter { it.value == TachyonGrid.SPLITTER }
-                .map { it.index }
-        }
+        val splitters = input.findAllPositions { it == TachyonGrid.SPLITTER }.map { it.col }
 
         val timelinesEntering = buildList<Long> {
             for (i in splitters.indices) {

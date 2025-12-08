@@ -2,12 +2,9 @@ package util
 
 import kotlin.math.atan2
 
-typealias Position = Pair<Int, Int>
+class Position(val row: Int, val col: Int)
 
-val Position.row: Int get() = first
-val Position.col: Int get() = second
-
-data class Grid<T : GridCell>(val content: List<MutableList<T>>) {
+data class Grid<T : GridCell>(private val content: List<MutableList<T>>) {
     val numRows: Int = content.size
     val numCols: Int = content.firstOrNull()?.size ?: 0
 
@@ -38,6 +35,13 @@ data class Grid<T : GridCell>(val content: List<MutableList<T>>) {
             }
         }
 
+    fun findAllPositions(predicate: (T) -> Boolean): List<Position> =
+        content.flatMapIndexed { row, rowList ->
+            rowList.mapIndexedNotNull { col, cell ->
+                if (predicate(cell)) Position(row, col) else null
+            }
+        }
+
     fun printGrid() {
         for (row in content) {
             val line = row.map { it.toChar() }.joinToString("")
@@ -49,7 +53,7 @@ data class Grid<T : GridCell>(val content: List<MutableList<T>>) {
     fun find(gridCell: GridCell): Position = content.withIndex().flatMap { (rowIndex, row) ->
         row.withIndex().mapNotNull { (colIndex, cell) ->
             if (cell == gridCell) {
-                rowIndex to colIndex
+                Position(rowIndex, colIndex)
             } else {
                 null
             }

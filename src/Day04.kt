@@ -36,8 +36,8 @@ fun main() {
             val accessiblePositions = buildList {
                 grid.flatMapIndexed { row, col, cell ->
                     if (cell == PaperGrid.PAPER &&
-                        grid.neighbors(row to col, diagonals = true).count { it == PaperGrid.PAPER } < 4) {
-                        add(row to col)
+                        grid.neighbors(Position(row, col), diagonals = true).count { it == PaperGrid.PAPER } < 4) {
+                        add(Position(row, col))
                     }
                 }
             }

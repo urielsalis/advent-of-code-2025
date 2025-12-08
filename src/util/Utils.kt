@@ -69,8 +69,7 @@ fun merge(ranges: List<LongRange>): List<LongRange> {
  * Generates all permutations of the list.
  */
 fun <T> List<T>.permutations(): List<List<T>> {
-    if (isEmpty()) return listOf(emptyList())
-    if (size == 1) return listOf(this)
+    if (size <= 1) return listOf(this)
 
     val result = mutableListOf<List<T>>()
     for (i in indices) {
