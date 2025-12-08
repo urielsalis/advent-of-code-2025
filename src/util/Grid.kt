@@ -46,6 +46,48 @@ data class Grid<T : GridCell>(val content: List<MutableList<T>>) {
     }
 
     fun clone(): Grid<T> = Grid(content.map { it.toMutableList() })
+    fun find(gridCell: GridCell): Position = content.withIndex().flatMap { (rowIndex, row) ->
+        row.withIndex().mapNotNull { (colIndex, cell) ->
+            if (cell == gridCell) {
+                rowIndex to colIndex
+            } else {
+                null
+            }
+        }
+    }.first()
+
+    /**
+     * Performs a depth-first search starting from the given position.
+     * @param start The starting position for the search
+     * @param getNextPositions Lambda that returns the next positions to visit given the current position
+     * @param onVisit Optional lambda called when visiting each position
+     * @return Set of all visited positions
+     */
+    fun dfs(
+        start: Position,
+        getNextPositions: (Position, T) -> List<Position>,
+        onVisit: ((Position, T) -> Unit)? = null
+    ): Set<Position> {
+        val visited = mutableSetOf<Position>()
+
+        fun dfsRecursive(position: Position) {
+            // Boundary check
+            if (position.row !in content.indices || position.col !in content[0].indices) return
+            // Already visited check
+            if (position in visited) return
+            visited.add(position)
+
+            val cell = this[position]
+            onVisit?.invoke(position, cell)
+
+            // Get next positions to explore
+            val nextPositions = getNextPositions(position, cell)
+            nextPositions.forEach { dfsRecursive(it) }
+        }
+
+        dfsRecursive(start)
+        return visited
+    }
 
     companion object {
         private val ORTHOGONAL_DELTAS = listOf(
