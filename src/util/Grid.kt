@@ -3,9 +3,23 @@ package util
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
-class Position(val row: Int, val col: Int)
+data class Position(val row: Int, val col: Int)
 
 data class Position3D(val x: Int, val y: Int, val z: Int)
+
+data class Rectangle(val corner1: Position, val corner2: Position) {
+    val minRow = minOf(corner1.row, corner2.row)
+    val maxRow = maxOf(corner1.row, corner2.row)
+    val minCol = minOf(corner1.col, corner2.col)
+    val maxCol = maxOf(corner1.col, corner2.col)
+
+    fun area() = corner1.rectangleAreaTo(corner2)
+
+    fun intersects(other: Rectangle): Boolean {
+        return !(other.maxCol <= minCol || maxCol <= other.minCol ||
+                 other.maxRow <= minRow || maxRow <= other.minRow)
+    }
+}
 
 data class Grid<T : GridCell>(private val content: List<MutableList<T>>) {
     val numRows: Int = content.size
@@ -120,6 +134,12 @@ fun Position.distanceTo(other: Position): Int {
     val dx = other.col - col
     val dy = other.row - row
     return dx * dx + dy * dy
+}
+
+fun Position.rectangleAreaTo(other: Position): Long {
+    val width = kotlin.math.abs(other.col - col) + 1L
+    val height = kotlin.math.abs(other.row - row) + 1L
+    return width * height
 }
 
 fun Position3D.distanceTo(other: Position3D): Double {
