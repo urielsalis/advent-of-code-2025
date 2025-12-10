@@ -4,6 +4,14 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.23.4"
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("tools.aqua:z3-turnkey:4.13.0.1")
+}
+
 sourceSets {
     main {
         kotlin.srcDir("src")
