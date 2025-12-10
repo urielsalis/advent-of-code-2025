@@ -1,8 +1,11 @@
 package util
 
 import kotlin.math.atan2
+import kotlin.math.sqrt
 
 class Position(val row: Int, val col: Int)
+
+data class Position3D(val x: Int, val y: Int, val z: Int)
 
 data class Grid<T : GridCell>(private val content: List<MutableList<T>>) {
     val numRows: Int = content.size
@@ -117,6 +120,13 @@ fun Position.distanceTo(other: Position): Int {
     val dx = other.col - col
     val dy = other.row - row
     return dx * dx + dy * dy
+}
+
+fun Position3D.distanceTo(other: Position3D): Double {
+    val dx = (other.x - x).toDouble()
+    val dy = (other.y - y).toDouble()
+    val dz = (other.z - z).toDouble()
+    return sqrt(dx * dx + dy * dy + dz * dz)
 }
 
 interface GridCell {
