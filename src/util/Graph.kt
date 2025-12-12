@@ -9,6 +9,10 @@ class Graph {
         adjacencyList.computeIfAbsent(from) { mutableListOf() }.add(to)
     }
 
+    fun getNeighbors(node: String): List<String> {
+        return adjacencyList[node] ?: emptyList()
+    }
+
     fun shortestPath(start: String, end: String): Int? {
         val queue = ArrayDeque<Pair<String, Int>>()
         val visited = mutableSetOf<String>()
