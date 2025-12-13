@@ -1,6 +1,12 @@
 import util.readLines
 import util.Graph
 
+data class PathContext(
+    val graph: Graph,
+    val requiredNodes: List<String>,
+    val memo: MutableMap<Pair<String, Int>, Long>
+)
+
 fun main() {
     fun buildGraph(input: List<String>) = Graph().apply {
         input.forEach { line ->
@@ -14,41 +20,36 @@ fun main() {
 
     fun countPaths(
         current: String,
-        graph: Graph,
         visited: Set<String>,
         requiredNodesMask: Int,
-        requiredNodes: List<String>,
-        memo: MutableMap<Pair<String, Int>, Long>
+        context: PathContext
     ): Long {
-        if (current == "out") {
-            val allRequiredMask = (1 shl requiredNodes.size) - 1
-            return if (requiredNodesMask == allRequiredMask) 1L else 0L
+        val allRequiredMask = (1 shl context.requiredNodes.size) - 1
+
+        return when {
+            current == "out" -> if (requiredNodesMask == allRequiredMask) 1L else 0L
+            current in visited -> 0L
+            else -> context.memo.getOrPut(current to requiredNodesMask) {
+                val updatedMask = context.requiredNodes.indexOf(current).takeIf { it >= 0 }
+                    ?.let { requiredNodesMask or (1 shl it) }
+                    ?: requiredNodesMask
+
+                context.graph.getNeighbors(current).sumOf { neighbor ->
+                    countPaths(neighbor, visited + current, updatedMask, context)
+                }
+            }
         }
-
-        if (current in visited) return 0L
-
-        memo[current to requiredNodesMask]?.let { return it }
-
-        val updatedMask = requiredNodes.indexOf(current).takeIf { it >= 0 }
-            ?.let { requiredNodesMask or (1 shl it) }
-            ?: requiredNodesMask
-
-        val pathCount = graph.getNeighbors(current).sumOf { neighbor ->
-            countPaths(neighbor, graph, visited + current, updatedMask, requiredNodes, memo)
-        }
-
-        return pathCount.also { memo[current to requiredNodesMask] = it }
     }
 
     fun part1(input: List<String>): Long {
-        val graph = buildGraph(input)
-        return countPaths("you", graph, emptySet(), 0, emptyList(), mutableMapOf())
+        val context = PathContext(buildGraph(input), emptyList(), mutableMapOf())
+        return countPaths("you", emptySet(), 0, context)
     }
 
     fun part2(input: List<String>): Long {
-        val graph = buildGraph(input)
         val requiredNodes = listOf("dac", "fft")
-        return countPaths("svr", graph, emptySet(), 0, requiredNodes, mutableMapOf())
+        val context = PathContext(buildGraph(input), requiredNodes, mutableMapOf())
+        return countPaths("svr", emptySet(), 0, context)
     }
 
     val testInput = readLines(11, isTest = true)

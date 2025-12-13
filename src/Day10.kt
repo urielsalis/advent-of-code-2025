@@ -51,9 +51,10 @@ fun main() {
 
     fun part1(machines: List<Machine>): Long = machines.sumOf { solveMachine(it).toLong() }
 
+    @Suppress("SpreadOperator")
     fun solveMachineJoltage(machine: Machine): Int = Context().use { ctx ->
         val optimize = ctx.mkOptimize()
-        val presses = machine.connections.indices.map { ctx.mkIntConst("press$it") }
+        val presses = Array(machine.connections.size) { ctx.mkIntConst("press$it") }
 
         presses.forEach { optimize.Add(ctx.mkGe(it, ctx.mkInt(0))) }
 
@@ -61,12 +62,13 @@ fun main() {
             val terms = machine.connections.indices
                 .filter { counterIdx in machine.connections[it].connections }
                 .map { presses[it] }
+                .toTypedArray()
 
-            val sum = if (terms.isEmpty()) ctx.mkInt(0) else ctx.mkAdd(*terms.toTypedArray())
+            val sum = if (terms.isEmpty()) ctx.mkInt(0) else ctx.mkAdd(*terms)
             optimize.Add(ctx.mkEq(sum, ctx.mkInt(machine.joltageRequirements[counterIdx])))
         }
 
-        optimize.MkMinimize(ctx.mkAdd(*presses.toTypedArray()))
+        optimize.MkMinimize(ctx.mkAdd(*presses))
 
         if (optimize.Check() == Status.SATISFIABLE) {
             presses.sumOf { optimize.model.eval(it, false).toString().toInt() }

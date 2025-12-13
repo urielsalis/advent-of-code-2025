@@ -1,0 +1,14 @@
+build:
+  maxIssues: 0
+
+complexity:
+  TooManyFunctions:
+    active: false
+
+naming:
+  MatchingDeclarationName:
+    active: false
+
+style:
+  MagicNumber:
+    active: false

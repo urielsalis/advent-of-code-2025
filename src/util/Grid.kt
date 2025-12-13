@@ -152,3 +152,40 @@ fun Position3D.distanceTo(other: Position3D): Double {
 interface GridCell {
     fun toChar(): Char
 }
+
+data class Shape(val cells: Set<Pair<Int, Int>>) {
+    val area = cells.size
+
+    fun allOrientations(): List<Shape> {
+        val rotations = generateSequence(this) { it.rotate90() }.take(4).toList()
+        return (rotations + rotations.map { it.flip() }).distinct()
+    }
+
+    private fun rotate90() = Shape(cells.map { (x, y) -> (-y to x) }.toSet()).normalize()
+
+    private fun flip() = Shape(cells.map { (x, y) -> (cells.maxOf { it.first } - x) to y }.toSet())
+
+    private fun normalize(): Shape {
+        val minX = cells.minOf { it.first }
+        val minY = cells.minOf { it.second }
+        return Shape(cells.map { (x, y) -> (x - minX) to (y - minY) }.toSet())
+    }
+}
+
+data class GridBounds(val width: Int, val height: Int)
+
+fun canPlaceShape(
+    grid: Array<BooleanArray>,
+    shape: Shape,
+    offsetX: Int,
+    offsetY: Int,
+    bounds: GridBounds
+) = shape.cells.all { (x, y) ->
+    val newX = x + offsetX
+    val newY = y + offsetY
+    newX in 0 until bounds.width && newY in 0 until bounds.height && !grid[newY][newX]
+}
+
+fun updateGrid(grid: Array<BooleanArray>, shape: Shape, offsetX: Int, offsetY: Int, value: Boolean) {
+    shape.cells.forEach { (x, y) -> grid[y + offsetY][x + offsetX] = value }
+}
